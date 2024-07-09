@@ -8,25 +8,16 @@ function Create-CoreFolders {
 
 function Download-Software {
     Push-Location "C:\Scratch"
-    $Links = "https://2.na.dl.wireshark.org/win64/Wireshark-4.2.5-x64.exe", "https://download.sysinternals.com/files/Procdump.zip", "https://download.sysinternals.com/files/ProcessMonitor.zip"
-    $ProgressPreference = "SilentlyContinue"
-    $Links | ForEach-Object {
-        $OutputFile = $_.Split("/")[-1]
-        Write-Host "Downloading $_"
-        Invoke-WebRequest $_ -OutFile $OutputFile
-        if($OutputFile.Contains(".zip")) {
-            Expand-Archive $OutputFile .
-            Remove-Item *.zip | Out-Null
-        }
-        Move-Item * C:\Tools\
+    $Packages = "WiresharkFoundation.Wireshark", "Sysinternals Suite"
+    $Packages | ForEach-Object {
+        winget install $_ --silent --accept-source-agreements --accept-package-agreements
     }
     Pop-Location
 }
 
 function Setup-Software {
     Push-Location "C:\Tools"
-    Start-Process ".\procdump.exe" -ArgumentList "-i -ma 'C:\Dumps'" -Wait
-    Start-Process ".\Wireshark-4.2.5-x64.exe" -Wait
+    Start-Process "procdump.exe" -ArgumentList "-i -ma 'C:\Dumps'" -Wait
     Start-Process "bcdedit" -ArgumentList "/set testsigning on"
     Set-Processmitigation -Name "c:\windows\system32\lsass.exe" -Disable UserShadowStack
     Pop-Location
