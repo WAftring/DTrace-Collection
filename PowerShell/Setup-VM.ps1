@@ -23,6 +23,8 @@ function Download-Software {
     $Packages | ForEach-Object {
         winget install $_ --silent --accept-source-agreements --accept-package-agreements
     }
+    Invoke-WebRequest "https://download.microsoft.com/download/e/b/3/eb320eb1-b21e-4e6e-899e-d6aec552ecb0/KIT_BUNDLE_WINDOWSSDK_MEDIACREATION/winsdksetup.exe" -OutFile "winsdksetup.exe"
+    .\winsdksetup.exe /features OptionId.AvrfExternal /quiet
     Pop-Location
 }
 
