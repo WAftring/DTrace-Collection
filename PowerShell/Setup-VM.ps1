@@ -58,6 +58,11 @@ function Setup-RegistryKeys {
     reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa /v RunasPPL /t REG_DWORD /d 0 /f
     reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps" /v DumpFolder /t REG_EXPAND_SZ /d "c:\dumps" /f
     reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps" /v DumpType /t REG_DWORD /d 2 /f
+    wmic recoveros set DebugInfoType=1
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v CrashDumpEnabled /t REG_DWORD /d 1 /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v DumpFile /t REG_EXPAND_SZ /d "C:\Windows\MEMORY.DMP" /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /v MiniDumpType /t REG_DWORD /d 2 /f
+
 }
 
 function Setup-DC {
@@ -91,12 +96,12 @@ function e {
 }
 "@ | Out-File $PROFILE
 
+Rename-Computer
 if ($DC) {
     Write-Host "Setup Domain Controller"
     Setup-DC
 }
 
-Rename-Computer
 Read-Host "Press Enter to restart"
 
 Restart-Computer -Force
