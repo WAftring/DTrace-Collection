@@ -19,7 +19,7 @@ function Create-CoreFolders {
 
 function Download-Software {
     Push-Location "C:\Scratch"
-    $Packages = "WiresharkFoundation.Wireshark", "Sysinternals Suite"
+    $Packages = "WiresharkFoundation.Wireshark", "Sysinternals Suite", "python"
     $Packages | ForEach-Object {
         winget install $_ --silent --accept-source-agreements --accept-package-agreements
     }
