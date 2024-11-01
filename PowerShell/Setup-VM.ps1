@@ -72,36 +72,36 @@ function Setup-DC {
     Install-ADDSForest -DomainName $domain -SafeModeAdministratorPassword $pw -InstallDNS -Force -Confirm:$false
 }
 
-Write-Host "Creating core user"
-Create-MyUser
-Write-Host "Setting up basic folder structure"
-Create-CoreFolders
-Write-Host "Downloading required software"
-Download-Software
-Write-Host "Setting up software"
-Setup-Software
-Remove-Item C:\Scratch\*
-Write-Host "Setting up registry keys"
-Setup-RegistryKeys
-Write-Host "Setting up SMB Shares"
-Setup-Shares
-Write-Host "Setup RDP"
-Setup-RDP
-Write-Host "Creating PS Profile"
-New-Item $PROFILE -Force
-@"
-function e {
-        param(`$Location = ".")
-        explorer `$Location
+if($DC) {
+	Write-Host "Setup Domain Controller"
+	Setup-DC
+} else {
+	Write-Host "Creating core user"
+	Create-MyUser
+	Write-Host "Setting up basic folder structure"
+	Create-CoreFolders
+	Write-Host "Downloading required software"
+	Download-Software
+	Write-Host "Setting up software"
+	Setup-Software
+	Remove-Item C:\Scratch\*
+	Write-Host "Setting up registry keys"
+	Setup-RegistryKeys
+	Write-Host "Setting up SMB Shares"
+	Setup-Shares
+	Write-Host "Setup RDP"
+	Setup-RDP
+	Write-Host "Creating PS Profile"
+	New-Item $PROFILE -Force
+	@"
+	function e {
+			param(`$Location = ".")
+			explorer `$Location
+	}
+	"@ | Out-File $PROFILE
+
+
+	Read-Host "Press Enter to restart"
+
+	Restart-Computer -Force
 }
-"@ | Out-File $PROFILE
-
-Rename-Computer
-if ($DC) {
-    Write-Host "Setup Domain Controller"
-    Setup-DC
-}
-
-Read-Host "Press Enter to restart"
-
-Restart-Computer -Force
