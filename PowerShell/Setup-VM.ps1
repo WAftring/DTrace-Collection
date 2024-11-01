@@ -102,6 +102,6 @@ if($DC) {
 
 
 	Read-Host "Press Enter to restart"
-
+	Rename-Computer
 	Restart-Computer -Force
 }
