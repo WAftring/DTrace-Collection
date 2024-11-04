@@ -98,7 +98,7 @@ if($DC) {
 			param(`$Location = ".")
 			explorer `$Location
 	}
-	"@ | Out-File $PROFILE
+"@ | Out-File $PROFILE
 
 
 	Read-Host "Press Enter to restart"
